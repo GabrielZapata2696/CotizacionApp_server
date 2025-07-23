@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "1234",
+    "database": "3754403_sitekol",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": true
+  },
+  "test": {
+    "username": "postgres",
+    "password": "1234",
+    "database": "3754403_sitekol_test",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "logging": false
+  }
+}

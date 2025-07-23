@@ -1,0 +1,631 @@
+{
+  "info": {
+    "name": "SITEKOL API",
+    "description": "Complete API collection for SITEKOL backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.data.tokens.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', response.data.tokens.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"NpJ6AfMWHw\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documento\": \"123456789\",\n  \"nombre\": \"Test\",\n  \"apellido\": \"User\",\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\",\n  \"correo\": \"test@example.com\",\n  \"telefono\": \"1234567890\",\n  \"empresa\": 1,\n  \"pais\": \"CO\",\n  \"rol\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Users",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Updated Name\",\n  \"apellido\": \"Updated Surname\",\n  \"correo\": \"updated@example.com\",\n  \"telefono\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"NpJ6AfMWHw\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["users", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Get Consultation Limits",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/consultation-limits",
+              "host": ["{{base_url}}"],
+              "path": ["users", "consultation-limits"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏢 Companies",
+      "item": [
+        {
+          "name": "Get All Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": ["{{base_url}}"],
+              "path": ["companies"]
+            }
+          }
+        },
+        {
+          "name": "Get Company by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/1",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"New Company\",\n  \"identificacion\": \"987654321-0\",\n  \"porcentaje_pago\": 85.00,\n  \"porcentaje_pago_rh\": 80.00,\n  \"porcentaje_pago_pt\": 82.00,\n  \"gastos_operativos\": 1000.00,\n  \"gastos_financieros\": 500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": ["{{base_url}}"],
+              "path": ["companies"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🥇 Metals",
+      "item": [
+        {
+          "name": "Get All Metals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/metals",
+              "host": ["{{base_url}}"],
+              "path": ["metals"]
+            }
+          }
+        },
+        {
+          "name": "Create Metal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metal\": \"Silver\",\n  \"simbolo\": \"AG\",\n  \"unidad\": \"Troy Ounce\",\n  \"estado\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/metals",
+              "host": ["{{base_url}}"],
+              "path": ["metals"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": ["{{base_url}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Gold Ring 18K\",\n  \"referencia\": \"GR18K001\",\n  \"referencia2\": \"ALT001\",\n  \"peso\": 5.50,\n  \"marca\": 1,\n  \"observacion\": \"Classic gold ring\",\n  \"metalCompositions\": [\n    {\n      \"id_metal\": 1,\n      \"cantidad\": 750.0\n    },\n    {\n      \"id_metal\": 2,\n      \"cantidad\": 250.0\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": ["{{base_url}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Calculate Product Price",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 1,\n  \"companyId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/1/calculate-price",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1", "calculate-price"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 Pricing",
+      "item": [
+        {
+          "name": "Calculate Price",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2,\n  \"companyId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pricing/calculate",
+              "host": ["{{base_url}}"],
+              "path": ["pricing", "calculate"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Rates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pricing/rates",
+              "host": ["{{base_url}}"],
+              "path": ["pricing", "rates"]
+            }
+          }
+        },
+        {
+          "name": "Get Formula",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pricing/formula",
+              "host": ["{{base_url}}"],
+              "path": ["pricing", "formula"]
+            }
+          }
+        },
+        {
+          "name": "Update Rates (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"forceUpdate\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pricing/update-rates",
+              "host": ["{{base_url}}"],
+              "path": ["pricing", "update-rates"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Data Access",
+      "item": [
+        {
+          "name": "Get Countries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/data/paises",
+              "host": ["{{base_url}}"],
+              "path": ["data", "paises"]
+            }
+          }
+        },
+        {
+          "name": "Get Brands",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/data/marcas",
+              "host": ["{{base_url}}"],
+              "path": ["data", "marcas"]
+            }
+          }
+        },
+        {
+          "name": "Get Formulas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/data/formulas",
+              "host": ["{{base_url}}"],
+              "path": ["data", "formulas"]
+            }
+          }
+        },
+        {
+          "name": "Get Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/data/logs?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["data", "logs"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/data/sesiones",
+              "host": ["{{base_url}}"],
+              "path": ["data", "sesiones"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔧 System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "API Documentation",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/docs",
+              "host": ["{{base_url}}"],
+              "path": ["docs"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
