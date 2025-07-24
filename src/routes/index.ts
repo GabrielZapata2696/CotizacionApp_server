@@ -11,6 +11,7 @@ import tarifaRoutes from './tarifaRoutes';
 import uploadRoutes from './uploadRoutes';
 import { pricingRoutes } from './pricingRoutes';
 import dataRoutes from './dataRoutes';
+import emailRoutes from './emailRoutes';
 
 export const setupRoutes = (app: Express): void => {
   const apiPrefix = `/api/${config.apiVersion}`;
@@ -38,6 +39,7 @@ export const setupRoutes = (app: Express): void => {
   app.use(`${apiPrefix}/rates`, tarifaRoutes);
   app.use(`${apiPrefix}/pricing`, pricingRoutes);
   app.use(`${apiPrefix}/upload`, uploadRoutes);
+  app.use(`${apiPrefix}/email`, emailRoutes);
   
   // Data access routes for existing tables
   app.use(`${apiPrefix}/data`, dataRoutes);
@@ -101,6 +103,12 @@ export const setupRoutes = (app: Express): void => {
         upload: {
           'POST /upload/image': 'Upload image file',
           'DELETE /upload/:filename': 'Delete uploaded file'
+        },
+        email: {
+          'POST /email/test': 'Send test email',
+          'POST /email/welcome': 'Send welcome email',
+          'POST /email/password-reset': 'Send password reset email',
+          'POST /email/custom': 'Send custom email'
         }
       }
     });

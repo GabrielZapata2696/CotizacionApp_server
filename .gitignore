@@ -65,3 +65,4 @@ test-*.js
 
 # Misc
 *.bak
+node_modules

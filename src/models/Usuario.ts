@@ -10,18 +10,23 @@ export class Usuario extends Model {
   public username!: string;
   public password!: string;
   public email!: string;
-  public telefono!: string;
-  public creacion!: Date;
-  public empresa!: number;
-  public pais!: string;
-  public rol!: number;
-  public estado!: number;
+  public telefono?: string;
+  public direccion?: string;
+  public fechaNacimiento?: Date;
+  public paisId!: number;
+  public rol!: string;
+  public estado!: boolean;
+  public consultasSemanales!: number;
+  public limiteConsultas!: number;
+  public ultimaConsulta?: Date;
+  public resetPasswordToken?: string;
+  public resetPasswordExpires?: Date;
+  public lastLoginAt?: Date;
+  public createdAt!: Date;
+  public updatedAt!: Date;
 
   static associate() {
-    Usuario.belongsTo(Empresa, {
-      foreignKey: 'empresa',
-      as: 'company',
-    });
+    // TODO: Add associations when needed
   }
 }
 
@@ -57,38 +62,68 @@ Usuario.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     telefono: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       allowNull: true,
     },
-    creacion: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+    direccion: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
-    empresa: {
+    fechaNacimiento: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    paisId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    pais: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
     rol: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.ENUM('admin', 'user', 'premium'),
       allowNull: false,
+      defaultValue: 'user',
     },
     estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    consultasSemanales: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 1,
+      defaultValue: 0,
+    },
+    limiteConsultas: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 50,
+    },
+    ultimaConsulta: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    lastLoginAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {
     sequelize,
     modelName: 'Usuario',
-    tableName: 'usuario',
-    timestamps: false,
+    tableName: 'Usuarios',
+    timestamps: true,
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
     defaultScope: {
       attributes: { exclude: ['password'] },
     },
