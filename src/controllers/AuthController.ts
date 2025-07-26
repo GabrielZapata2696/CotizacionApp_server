@@ -16,18 +16,19 @@ export class AuthController {
   public async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password }: LoginDto = req.body;
-      
+      console.log(`----------Login attempt for email: ${email}`);
+      console.log(`----------Password provided: ${password ? password : 'not provided'}`);
       // Find user with password included
       const user = await Usuario.scope('withPassword').findOne({
         where: { email, estado: true }
       });
       
-
+      console.log(`----------User found: ${user ? user.username : 'not found'}`);
       if (!user) {
         // Don't reveal if email exists or not for security
         const response: ApiResponse = {
           success: false,
-          message: 'Credenciales inválidas',
+          message: 'Usuario no encontrado',
         };
         res.status(401).json(response);
         return;
@@ -35,11 +36,11 @@ export class AuthController {
       
       // Verify password     
       const isValidPassword = await bcrypt.compare(password, user.password);
-      
+      console.log(isValidPassword)
       if (!isValidPassword) {
         const response: ApiResponse = {
           success: false,
-          message: 'Credenciales inválidas',
+          message: 'Contraseña incorrecta',
         };
         res.status(401).json(response);
         return;
